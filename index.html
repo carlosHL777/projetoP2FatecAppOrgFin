@@ -67,7 +67,7 @@
             <div class="conteudo-perfil-usuario">
                 <img src="src/imgs/jonapng.png" class="user-pic">
                 <div class="user-descricao">
-                    <h2>Olá, <span>Fulano</span>!</h2>
+                    <h2>Olá <span>Fulano</span>!</h2>
                     <p>Pronto para cuidar do seu dinheiro hoje?</p>
                 </div>
             </div>
@@ -75,7 +75,7 @@
 
         <div class="user-renda-atual">
             <h3>Seu saldo atual é de:</h3>
-            <h1>R$ 0,00</h1>
+            <h1 id="saldo-atual-user">R$ 0,00</h1>
         </div>
 
         <div class="btn-add-gastos">
@@ -89,20 +89,21 @@
         <div class="extrato">
             <h2 id="title-extrato">Extrato da Conta</h2>
             <li></li>
-            <table>
+            <table class="tabela-extrato">
                 <thead>
                     <tr>
-                        <th>Código</th>
+                        <th id="extrato-cod">Código</th>
                         <th>Data</th>
                         <th>Descrição</th>
                         <th>Tipo</th>
                         <th>Categoria</th>
                         <th>Valor</th>
-                        <th>Saldo Atual</th>
+                        <th id="extrato-saldo-atual">Saldo Atual</th>
+                        <th id="extrato-acao">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="transaction-row">
+                    <tr class="extrato-transacoes">
                         
                     </tr>
                 </tbody>
@@ -125,31 +126,31 @@
             </div>
 
             <form class="form-add-mov" method="">
-                <label for="name">Data:</label>
-                <input type="date" id="date">
+                <label for="extrato-data">Data:</label>
+                <input type="date"  id="extrato-data">
                 <br><br>
-                <label for="email">Tipo:</label>
-                <select id="my-select" name="selection">
+                <label for="extrato-tipo">Tipo:</label>
+                <select id="extrato-tipo">
                     <option value="option1">Gasto</option>
                     <option value="option2">Renda</option>
                 </select>
                 <br><br>
-                <label for="email">Categoria:</label>
-                <select id="my-select" name="selection">
-                    <option value="option1">Despesa</option>
+                <label for="extrato-categ">Categoria:</label>
+                <select id="extrato-categ">
+                    <option value="option1" selected="selected">Despesa</option>
                     <option value="option2">Emergência</option>
-                    <option value="option2">Transporte</option>
-                    <option value="option2">Lazer</option>
-                    <option value="option2">Saúde</option>
-                    <option value="option2">Educação</option>
-                    <option value="option2">Impostos</option>
-                    <option value="option2">Alimentação</option>
+                    <option value="option3">Transporte</option>
+                    <option value="option4">Lazer</option>
+                    <option value="option6">Saúde</option>
+                    <option value="option7">Educação</option>
+                    <option value="option8">Impostos</option>
+                    <option value="option9">Alimentação</option>
                 </select>
                 <br><br>
-                <label for="email">Valor:</label>
+                <label for="valor-form">Valor:</label>
                 <input type="text" id="valor-form" placeholder=" R$ 0,00" maxlength="10">
                 <br><br>
-                <label for="email">Descrição:</label>
+                <label for="descricao-form">Descrição:</label>
                 <p></p>
                 <textarea id="descricao-form" placeholder=" Evento, Carro, etc." maxlength="30"></textarea>
                 <br><br>
