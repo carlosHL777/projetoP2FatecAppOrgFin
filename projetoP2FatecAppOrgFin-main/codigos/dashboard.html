@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Finance Easy - Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Darker+Grotesque:wght@300..900&family=Montserrat:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="cssDash/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* Conteúdo ao lado do menu */
+        * {
+            font-family: "Montserrat", sans-serif;
+        }
+
+        .main-content {
+            margin-left: 90px;
+            padding: 30px;
+            transition: .2s;
+        }
+
+        /* Quando o menu expandir */
+        .main-content.expandir {
+            margin-left: 220px;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .stats-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            flex: 1;
+            min-width: 250px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        select {
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        /* Ajustar tamanho máximo do gráfico */
+        .chart-box {
+            max-width: 400px;
+            margin: 0 auto;   
+        }
+        .chart-box canvas {
+            width: 100% !important;
+            height: auto !important;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <nav class="menu-lateral">
+
+        <div class="btn-expandir" id="bt-exp">
+            <i class="fa-solid fa-bars"></i>
+        </div>
+
+        <ul>
+            <li class="item-menu">
+                <a href="index.html">
+                    <span class="icone-menu-lat"><i class="fa-solid fa-house"></i></span>
+                    <span class="txt-link-menu-lat">Início</span>
+                </a>
+            </li>
+
+            <li class="item-menu ativo">
+                <a href="#">
+                    <span class="icone-menu-lat"><i class="fa-solid fa-chart-simple"></i></span>
+                    <span class="txt-link-menu-lat">Gráficos</span>
+                </a>
+            </li>
+
+            <li class="item-menu">
+                <a href="metas.html">
+                    <span class="icone-menu-lat"><i class="fa-solid fa-list-check"></i></span>
+                    <span class="txt-link-menu-lat">Metas</span>
+                </a>
+            </li>
+
+            <li class="item-menu">
+                <a href="#">
+                    <span class="icone-menu-lat"><i class="fa-solid fa-user"></i></span>
+                    <span class="txt-link-menu-lat">Perfil</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- ÁREA DA DASHBOARD -->
+    <div class="main-content">
+
+        <h1>Dashboard Financeira</h1>
+
+        <div class="stats-container">
+            <div class="card">
+                <h3>Saldo</h3>
+                <input id="inputSaldo" type="number" placeholder="Digite a Saldo" style="width:100%; padding:6px;">
+                <p id="valorSaldo">R$ 5.000,00</p>
+            </div>
+
+            <div class="card">
+                <h3>Despesas</h3>
+                <input id="inputDespesas" type="number" placeholder="Digite as Despesas" style="width:100%; padding:6px;">
+                <p id="valorDespesas">R$ 2.300,00</p>
+            </div>
+
+            <div class="card">
+                <h3>Meta</h3>
+                <input id="inputMeta" type="number" placeholder="Digite a meta" style="width:100%; padding:6px;">
+                <p id="valorMeta">R$ 10.000,00</p>
+            </div>
+        </div>
+
+        <div class="chart-box">
+            <h2>Gráfico Financeiro</h2>
+            <select id="chartType">
+                <option value="line">Linha</option>
+                <option value="bar">Barras</option>
+                <option value="pie">Pizza</option>
+            </select>
+            <canvas id="grafico"></canvas>
+        </div>
+    </div>
+
+    <!-- SCRIPT DO MENU + SCRIPT DO GRÁFICO -->
+    <script src="javascriptDash/script.js"></script>
+
+    <script>
+        /* SCRIPT DE GRÁFICOS */
+        let ctx = document.getElementById("grafico").getContext("2d");
+
+        const dadosFinanceiros = {
+            labels: ["Saldo", "Despesas", "Meta"],
+            values: [5000, 2300, 10000],
+        };
+
+        let chart;
+
+        function renderChart(tipo) {
+            if (chart) chart.destroy();
+
+            chart = new Chart(ctx, {
+                type: tipo,
+                data: {
+                    labels: dadosFinanceiros.labels,
+                    datasets: [{
+                        label: "Valores Financeiros",
+                        data: dadosFinanceiros.values,
+                        backgroundColor: ["#2A9D8F", "#E76F51", "#264653"]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                }
+            });
+        }
+
+        document.getElementById("chartType").addEventListener("change", (e) => {
+            renderChart(e.target.value);
+        });
+
+        renderChart("line");
+
+        function atualizarValores() {
+            const r = Number(document.getElementById("inputSaldo").value) || 0;
+            const g = Number(document.getElementById("inputDespesas").value) || 0;
+            const m = Number(document.getElementById("inputMeta").value) || 0;
+
+            dadosFinanceiros.values = [r, g, m];
+
+            document.getElementById("valorSaldo").innerText = `R$ ${r}`;
+            document.getElementById("valorDespesas").innerText = `R$ ${g}`;
+            document.getElementById("valorMeta").innerText = `R$ ${m}`;
+
+            renderChart(document.getElementById("chartType").value);
+        }
+
+        document.getElementById("inputSaldo").addEventListener("input", atualizarValores);
+        document.getElementById("inputDespesas").addEventListener("input", atualizarValores);
+        document.getElementById("inputMeta").addEventListener("input", atualizarValores);
+    </script>
+
+</body>
+</html>
