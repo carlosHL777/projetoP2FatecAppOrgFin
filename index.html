@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Darker+Grotesque:wght@300..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <title>Finance Easy</title>
+</head>
+
+<body>
+
+    <nav class="menu-lateral">
+
+        <div class="btn-expandir" id="bt-exp">
+            <i class="fa-solid fa-bars"></i>
+        </div>
+
+        <ul>
+            <li class="item-menu ativo">
+                <a href="#">
+                    <span class="icone-menu-lat"><i class="fa-solid fa-house"></i></span>
+                    <span class="txt-link-menu-lat">Início</span>
+                </a>
+            </li>
+
+            <li class="item-menu">
+                <a href="#">
+                    <span class="icone-menu-lat"><i class="fa-solid fa-chart-simple"></i></span>
+                    <span class="txt-link-menu-lat">Gráficos</span>
+                </a>
+            </li>
+
+            <li class="item-menu">
+                <a href="#">
+                    <span class="icone-menu-lat"><i class="fa-solid fa-list-check"></i></span>
+                    <span class="txt-link-menu-lat">Metas</span>
+                </a>
+            </li>
+
+            <li class="item-menu">
+                <a href="#">
+                    <span class="icone-menu-lat"><i class="fa-solid fa-user"></i></span>
+                    <span class="txt-link-menu-lat">Perfil</span>
+                </a>
+            </li>
+
+            <li class="item-menu">
+                <a href="#">
+                    <span class="icone-menu-lat"><i class="fa-solid fa-headset"></i></span>
+                    <span class="txt-link-menu-lat">Suporte</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="main-content">
+        <div class="perfil-usuario">
+            <div class="conteudo-perfil-usuario">
+                <img src="src/imgs/jonapng.png" class="user-pic">
+                <div class="user-descricao">
+                    <h2>Olá <span>Fulano</span>!</h2>
+                    <p>Pronto para cuidar do seu dinheiro hoje?</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="user-renda-atual">
+            <h3>Seu saldo atual é de:</h3>
+            <h1 id="saldo-atual-user">R$ 0,00</h1>
+        </div>
+
+        <div class="btn-add-gastos">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-plus-lg"
+                viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                    d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
+            </svg>
+        </div>
+
+        <div class="extrato">
+            <h2 id="title-extrato">Extrato da Conta</h2>
+            <li></li>
+            <table class="tabela-extrato">
+                <thead>
+                    <tr>
+                        <th id="extrato-cod">Código</th>
+                        <th>Data</th>
+                        <th>Descrição</th>
+                        <th>Tipo</th>
+                        <th>Categoria</th>
+                        <th>Valor</th>
+                        <th id="extrato-saldo-atual">Saldo Atual</th>
+                        <th id="extrato-acao">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="extrato-transacoes">
+                        
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="popup-form-add">
+
+        <div class="popup-conteudo-add">
+
+            <h2>Adicionar Registro</h2>
+
+            <div class="btn-fechar-form">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#d13b3b"
+                    class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+                    <path
+                        d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z" />
+                </svg>
+            </div>
+
+            <form class="form-add-mov" method="">
+                <label for="extrato-data">Data:</label>
+                <input type="date"  id="extrato-data">
+                <br><br>
+                <label for="extrato-tipo">Tipo:</label>
+                <select id="extrato-tipo">
+                    <option value="option1">Gasto</option>
+                    <option value="option2">Renda</option>
+                </select>
+                <br><br>
+                <label for="extrato-categ">Categoria:</label>
+                <select id="extrato-categ">
+                    <option value="option1" selected="selected">Despesa</option>
+                    <option value="option2">Emergência</option>
+                    <option value="option3">Transporte</option>
+                    <option value="option4">Lazer</option>
+                    <option value="option6">Saúde</option>
+                    <option value="option7">Educação</option>
+                    <option value="option8">Impostos</option>
+                    <option value="option9">Alimentação</option>
+                </select>
+                <br><br>
+                <label for="valor-form">Valor:</label>
+                <input type="text" id="valor-form" placeholder=" R$ 0,00" maxlength="10">
+                <br><br>
+                <label for="descricao-form">Descrição:</label>
+                <p></p>
+                <textarea id="descricao-form" placeholder=" Evento, Carro, etc." maxlength="30"></textarea>
+                <br><br>
+                <input type="submit" value="Adicionar" id="btn-form-add">
+            </form>
+        </div>
+    </div>
+
+    </div>
+
+    <script src="javascript/script.js"></script>
+
+</body>
+
+</html>
