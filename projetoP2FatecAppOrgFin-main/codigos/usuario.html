@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Finance Easy - Usuário</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Darker+Grotesque:wght@300..900&family=Montserrat:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="cssDash/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* Conteúdo ao lado do menu */
+        * {
+            font-family: "Montserrat", sans-serif;
+        }
+
+        .main-content {
+            margin-left: 90px;
+            padding: 30px;
+            transition: .2s;
+        }
+
+        /* Quando o menu expandir */
+        .main-content.expandir {
+            margin-left: 220px;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .stats-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            flex: 1;
+            min-width: 250px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        select {
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        /* Ajustar tamanho máximo do gráfico */
+        .chart-box {
+            max-width: 400px;
+            margin: 0 auto;   
+        }
+        .chart-box canvas {
+            width: 100% !important;
+            height: auto !important;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <nav class="menu-lateral">
+
+        <div class="btn-expandir" id="bt-exp">
+            <i class="fa-solid fa-bars"></i>
+        </div>
+
+        <ul>
+            <li class="item-menu">
+                <a href="index.html">
+                    <span class="icone-menu-lat"><i class="fa-solid fa-house"></i></span>
+                    <span class="txt-link-menu-lat">Início</span>
+                </a>
+            </li>
+
+            <li class="item-menu">
+                <a href="dashboard.html">
+                    <span class="icone-menu-lat"><i class="fa-solid fa-chart-simple"></i></span>
+                    <span class="txt-link-menu-lat">Gráficos</span>
+                </a>
+            </li>
+
+            <li class="item-menu">
+                <a href="metas.html">
+                    <span class="icone-menu-lat"><i class="fa-solid fa-list-check"></i></span>
+                    <span class="txt-link-menu-lat">Metas</span>
+                </a>
+            </li>
+
+            <li class="item-menu ativo">
+                <a href="#">
+                    <span class="icone-menu-lat"><i class="fa-solid fa-user"></i></span>
+                    <span class="txt-link-menu-lat">Perfil</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- ÁREA DA DASHBOARD -->
+    <div class="main-content">
+
+
+
+<!-- Card de Foto de Perfil -->
+<div class="card" style="max-width:420px; border:1px solid #ddd; border-radius:8px; padding:14px; font-family:Arial, sans-serif;">
+  <h3 style="margin:0 0 10px;">Foto de Perfil</h3>
+
+  <div style="display:flex; align-items:center; gap:12px;">
+    <!-- Avatar atual -->
+    <img id="avatarImg"
+         src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='256' height='256' viewBox='/><path d='M32 224c0-40 40-72 96-72s96 32 96 72' fill='%239aa1a9'/></svg>"
+         alt="Avatar"
+         style="width:88px; height:88px; border-radius:50%; object-fit:cover; border:1px solid #ccc; background:#fafafa;">
+    <div style="flex:1;">
+      <p id="avatarInfo" style="margin:0 0 8px; color:#555;">Atual: Placeholder</p>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button id="btnAlterar" style="padding:8px 12px; border:none; border-radius:6px; background:#1565c0; color:#fff; font-weight:bold; cursor:pointer;">
+          Alterar
+        </button>
+        <button id="btnReset" style="padding:8px 12px; border:1px solid #ccc; border-radius:6px; background:#fff; color:#333; cursor:pointer;">
+          Redefinir
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast simples -->
+  <div id="toastAvatar" style="display:none; margin-top:10px; padding:8px; background:#e8f5e9; color:#1b5e20; border:1px solid #c8e6c9; border-radius:6px; font-size:0.95em;">
+    Foto atualizada com sucesso.
+  </div>
+</div>
+
+<!-- Modal (Pop-up) para alteração de foto -->
+<div id="modalOverlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:9999;">
+  <div role="dialog" aria-modal="true" aria-labelledby="modalTitle"
+       style="background:#fff; width:92%; max-width:520px; margin:10vh auto; border-radius:10px; box-shadow:0 10px 30px rgba(0,0,0,0.2); overflow:hidden;">
+    <div style="padding:14px 16px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
+      <h4 id="modalTitle" style="margin:0;">Alterar foto de perfil</h4>
+      <button id="btnCloseModal" aria-label="Fechar"
+              style="border:none; background:transparent; font-size:20px; cursor:pointer; color:#555;">×</button>
+    </div>
+
+    <div style="padding:16px;">
+      <!-- Input de arquivo -->
+      <label for="inputArquivo" style="display:block; font-weight:bold; margin-bottom:6px;">Selecionar imagem</label>
+      <input id="inputArquivo" type="file" accept="image/*"
+             style="width:100%; padding:6px; margin:0 0 12px;">
+
+      <!-- Prévia -->
+      <div style="display:flex; gap:12px; align-items:flex-start;">
+        <img id="previewImg"
+             src="data:image/svg+xml;utf8,<svg xmlns='httpfafb'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='14' fill='%239aa1a9'>Prévia aparecerá aqui</text></svg>"
+             alt="Prévia"
+             style="width:160px; height:160px; border-radius:50%; object-fit:cover; border:1px solid #ddd; background:#f8f8f8;">
+        <div style="flex:1;">
+          <p style="margin:0 0 8px; color:#666;">Dicas:
+            <br>• Formatos aceitos: JPG, PNG, WEBP, GIF
+            <br>• Tamanho máximo: 5 MB
+            <br>• Prévia é exibida em recorte circular (sem alterar o arquivo original)
+          </p>
+          <label style="display:flex; align-items:center; gap:6px; margin-top:8px;">
+            <input id="chkCircular" type="checkbox" checked>
+            <span>Exibir como circular</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Ações -->
+      <div style="display:flex; gap:8px; margin-top:16px; justify-content:flex-end; flex-wrap:wrap;">
+        <button id="btnAplicar" disabled
+                style="padding:8px 12px; border:none; border-radius:6px; background:#1565c0; color:#fff; font-weight:bold; cursor:pointer; opacity:0.8;">
+          Aplicar
+        </button>
+        <button id="btnCancelar" style="padding:8px 12px; border:1px solid #ccc; border-radius:6px; background:#fff; color:#333; cursor:pointer;">
+          Cancelar
+        </button>
+      </div>
+
+      <!-- Mensagens de erro -->
+      <p id="erroMsg" style="margin:10px 0 0; color:#b00020; display:none;">Arquivo inválido. Tente outro.</p>
+    </div>
+  </div>
+</div>
+
+<script src="javascriptUsuario/script.js"></script>
+
+<script>
+  // Placeholder SVG (mesmo do avatar do card)
+  const PLACEHOLDER_SRC =
+    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='256' height='256' viewBox='0 0 256 256'><rect width='256' height='256' fill='%23f3f4f6'/><circle cx='128' cy='96' r='44' fill='%239aa1a9'/><path d='M32 224c0-40 40-72 96-72s96 32 96 72' fill='%239aa1a9'/></svg>";
+
+  // Elementos do card
+  const avatarImg = document.getElementById('avatarImg');
+  const avatarInfo = document.getElementById('avatarInfo');
+  const btnAlterar = document.getElementById('btnAlterar');
+  const btnReset   = document.getElementById('btnReset');
+  const toastAvatar = document.getElementById('toastAvatar');
+
+  // Elementos do modal
+  const modalOverlay = document.getElementById('modalOverlay');
+  const btnCloseModal = document.getElementById('btnCloseModal');
+  const btnCancelar = document.getElementById('btnCancelar');
+  const inputArquivo = document.getElementById('inputArquivo');
+  const previewImg = document.getElementById('previewImg');
+  const chkCircular = document.getElementById('chkCircular');
+  const btnAplicar = document.getElementById('btnAplicar');
+  const erroMsg = document.getElementById('erroMsg');
+
+  // Estado temporário para a imagem escolhida
+  let tempURL = null;
+  let tempFileName = null;
+
+  // Abrir/fechar modal
+  function abrirModal() {
+    modalOverlay.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+    // Reset dentro do modal
+    inputArquivo.value = '';
+    previewImg.src =
+      "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='200'><rect width='100%' height='100%' fill='%23f9fafb'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='14' fill='%239aa1a9'>Prévia aparecerá aqui</text></svg>";
+    btnAplicar.disabled = true;
+    btnAplicar.style.opacity = 0.8;
+    erroMsg.style.display = 'none';
+    chkCircular.checked = true;
+    previewImg.style.borderRadius = '50%';
+  }
+  function fecharModal() {
+    modalOverlay.style.display = 'none';
+    document.body.style.overflow = '';
+    if (tempURL) {
+      URL.revokeObjectURL(tempURL);
+      tempURL = null;
+      tempFileName = null;
+    }
+  }
+
+  // Validação básica do arquivo
+  function validarArquivo(file) {
+    if (!file) return false;
+    const tiposAceitos = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+    const tamanhoMax = 5 * 1024 * 1024; // 5 MB
+    const okTipo = tiposAceitos.includes(file.type);
+    const okTamanho = file.size <= tamanhoMax;
+    return okTipo && okTamanho;
+  }
+
+  // Input de arquivo -> gerar preview
+  inputArquivo.addEventListener('change', () => {
+    const file = inputArquivo.files?.[0];
+    if (!file) return;
+
+    if (!validarArquivo(file)) {
+      erroMsg.textContent = 'Arquivo inválido (tipos: JPG, PNG, WEBP, GIF; até 5 MB).';
+      erroMsg.style.display = 'block';
+      btnAplicar.disabled = true;
+      btnAplicar.style.opacity = 0.8;
+      return;
+    }
+
+    erroMsg.style.display = 'none';
+    tempURL = URL.createObjectURL(file);
+    tempFileName = file.name;
+    previewImg.src = tempURL;
+    btnAplicar.disabled = false;
+    btnAplicar.style.opacity = 1;
+  });
+
+  // Alternar recorte circular
+  chkCircular.addEventListener('change', () => {
+    previewImg.style.borderRadius = chkCircular.checked ? '50%' : '8px';
+  });
+
+  // Aplicar nova foto ao avatar do card
+  btnAplicar.addEventListener('click', () => {
+    if (!tempURL) return;
+    avatarImg.src = tempURL; // usa ObjectURL; para persistir, você pode converter para Base64
+    avatarImg.style.borderRadius = '50%'; // mantém formato circular no card
+    avatarInfo.textContent = `Atual: ${tempFileName || 'Imagem personalizada'}`;
+    fecharModal();
+    // Toast de sucesso
+    toastAvatar.textContent = 'Foto atualizada com sucesso.';
+    toastAvatar.style.display = 'block';
+    setTimeout(() => { toastAvatar.style.display = 'none'; }, 2000);
+  });
+
+  // Botões de abrir/fechar
+  btnAlterar.addEventListener('click', abrirModal);
+  btnCloseModal.addEventListener('click', fecharModal);
+  btnCancelar.addEventListener('click', fecharModal);
+  modalOverlay.addEventListener('click', (e) => {
+    if (e.target === modalOverlay) fecharModal();
+  });
+
+  // Redefinir para placeholder
+  btnReset.addEventListener('click', () => {
+    avatarImg.src = PLACEHOLDER_SRC;
+    avatarInfo.textContent = 'Atual: Placeholder';
+    toastAvatar.textContent = 'Foto redefinida para o placeholder.';
+    toastAvatar.style.display = 'block';
+    setTimeout(() => { toastAvatar.style.display = 'none'; }, 2000);
+  });
+
+  // OPCIONAL: persistir avatar como Base64 no localStorage
+  // (Converte imagem selecionada para Base64 e salva; ao carregar, restaura)
+  /*
+  function blobToBase64(blob) {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  btnAplicar.addEventListener('click', async () => {
+    if (!inputArquivo.files?.[0]) return;
+    const base64 = await blobToBase64(inputArquivo.files[0]);
+    localStorage.setItem('avatarBase64', base64);
+    localStorage.setItem('avatarNome', inputArquivo.files[0].name);
+  });
+
+  // Restaura ao carregar
+  window.addEventListener('DOMContentLoaded', () => {
+    const saved = localStorage.getItem('avatarBase64');
+    const nome = localStorage.getItem('avatarNome');
+    if (saved) {
+      avatarImg.src = saved;
+      avatarInfo.textContent = `Atual: ${nome || 'Imagem personalizada'}`;
+    }
+  });
+  */
+</script>
+
+
+<div style="height:20px;"></div><div style="height:20px;"></div>
+
+
+
+ 
+
+
+<div class="card" style="max-width:480px; border:1px solid #ddd; border-radius:8px; padding:14px; font-family:Arial, sans-serif;">
+  <h3 style="margin:0 0 10px;">Dados do Usuário</h3>
+
+  <!-- Nome -->
+  <label for="inputNome" style="font-weight:bold;">Nome</label>
+  <input id="inputNome" type="text" placeholder="Digite o nome"
+         value="Fulano"
+         style="width:100%; padding:6px; margin:6px 0 10px;"/>
+
+  <!-- Idade -->
+  <label for="inputIdade" style="font-weight:bold;">Idade</label>
+  <input id="inputIdade" type="number" min="0" placeholder="Digite a idade"
+         value="19"
+         style="width:100%; padding:6px; margin:6px 0 10px;"/>
+
+  <!-- Moeda -->
+  <label for="selectMoeda" style="font-weight:bold;">Moeda utilizada</label>
+  <select id="selectMoeda" style="width:100%; padding:6px; margin:6px 0 10px;">
+    <option value="BRL" selected>BRL – Real brasileiro (R$)</option>
+    <option value="USD">USD – Dólar americano ($)</option>
+    <option value="EUR">EUR – Euro (€)</option>
+    <option value="GBP">GBP – Libra (£)</option>
+    <option value="JPY">JPY – Iene (¥)</option>
+    <option value="ARS">ARS – Peso argentino ($)</option>
+  </select>
+
+  <!-- Cargo -->
+  <label for="inputCargo" style="font-weight:bold;">Cargo</label>
+  <input id="inputCargo" type="text" placeholder="Digite o cargo"
+         value="Gestor de Ciber"
+         style="width:100%; padding:6px; margin:6px 0 10px;"/>
+
+  <!-- Salário/Renda Mensal -->
+  <label for="inputSalario" style="font-weight:bold;">Salário / Renda mensal</label>
+  <input id="inputSalario" type="number" step="0.01" min="0"
+         placeholder="Digite a renda mensal"
+         value="3000"
+         style="width:100%; padding:6px; margin:6px 0 12px;"/>
+
+  <!-- Botão de salvar -->
+  <button id="btnSalvar" style="width:100%; padding:10px; border:none; border-radius:6px; background:#1565c0; color:#fff; font-weight:bold; cursor:pointer;">
+    Salvar alteração
+  </button>
+
+  <!-- Toast simples -->
+  <div id="toast" style="display:none; margin-top:10px; padding:8px; background:#e8f5e9; color:#1b5e20; border:1px solid #c8e6c9; border-radius:6px; font-size:0.95em;">
+    Alterações salvas com sucesso.
+  </div>
+
+  <hr style="margin:14px 0; border:none; border-top:1px solid #eee;">
+
+  <!-- Exibição dos valores salvos -->
+  <div>
+    <p id="valorNome" style="margin:0 0 8px;"><strong>Nome:</strong> Fulano</p>
+    <p id="valorIdade" style="margin:0 0 8px;"><strong>Idade:</strong> 19 anos</p>
+    <p id="valorMoeda" style="margin:0 0 8px;"><strong>Moeda:</strong> BRL</p>
+    <p id="valorCargo" style="margin:0 0 8px;"><strong>Cargo:</strong> Gestor de Ciber</p>
+    <p id="valorSalario" style="margin:0;"><strong>Renda:</strong> R$ 3.000,00</p>
+  </div>
+</div>
+
+<script>
+  // Elementos do formulário
+  const inputNome = document.getElementById('inputNome');
+  const inputIdade = document.getElementById('inputIdade');
+  const selectMoeda = document.getElementById('selectMoeda');
+  const inputCargo = document.getElementById('inputCargo');
+  const inputSalario = document.getElementById('inputSalario');
+  const btnSalvar = document.getElementById('btnSalvar');
+  const toast = document.getElementById('toast');
+
+  // Elementos de exibição (valores salvos)
+  const valorNome = document.getElementById('valorNome');
+  const valorIdade = document.getElementById('valorIdade');
+  const valorMoeda = document.getElementById('valorMoeda');
+  const valorCargo = document.getElementById('valorCargo');
+  const valorSalario = document.getElementById('valorSalario');
+
+  // Locales por moeda para formatação
+  const currencyLocale = {
+    BRL: 'pt-BR',
+    USD: 'en-US',
+    EUR: 'de-DE',
+    GBP: 'en-GB',
+    JPY: 'ja-JP',
+    ARS: 'es-AR'
+  };
+
+  function formatCurrency(value, currencyCode) {
+    const locale = currencyLocale[currencyCode] || 'en-US';
+    try {
+      return new Intl.NumberFormat(locale, {
+        style: 'currency',
+        currency: currencyCode,
+        minimumFractionDigits: currencyCode === 'JPY' ? 0 : 2
+      }).format(Number(value || 0));
+    } catch (e) {
+      return `${currencyCode} ${Number(value || 0).toFixed(2)}`;
+    }
+  }
+
+  function mostrarToast(msg = 'Alterações salvas com sucesso.') {
+    toast.textContent = msg;
+    toast.style.display = 'block';
+    setTimeout(() => { toast.style.display = 'none'; }, 2000);
+  }
+
+  // Ação do botão: aplica alterações aos "valores salvos"
+  btnSalvar.addEventListener('click', () => {
+    const nome = (inputNome.value || '').trim();
+    const idade = Number(inputIdade.value || 0);
+    const moeda = selectMoeda.value;
+    const cargo = (inputCargo.value || '').trim();
+    const salario = Number(inputSalario.value || 0);
+
+    // Atualiza textos
+    valorNome.textContent = `Nome: ${nome || '—'}`;
+    valorIdade.textContent = `Idade: ${idade ? `${idade} anos` : '—'}`;
+    valorMoeda.textContent = `Moeda: ${moeda || '—'}`;
+    valorCargo.textContent = `Cargo: ${cargo || '—'}`;
+    valorSalario.textContent = `Renda: ${formatCurrency(salario, moeda)}`;
+
+    // Feedback visual
+    mostrarToast();
+  });
+
+  // OPCIONAL: descomente para persistir no localStorage ao salvar
+  /*
+  btnSalvar.addEventListener('click', () => {
+    const payload = {
+      nome: (inputNome.value || '').trim(),
+      idade: Number(inputIdade.value || 0),
+      moeda: selectMoeda.value,
+      cargo: (inputCargo.value || '').trim(),
+      salario: Number(inputSalario.value || 0)
+    };
+    localStorage.setItem('dadosUsuario', JSON.stringify(payload));
+    mostrarToast('Alterações salvas e persistidas.');
+  });
+
+  // Ao carregar, se existir algo no storage, pré-preenche
+  window.addEventListener('DOMContentLoaded', () => {
+    const saved = localStorage.getItem('dadosUsuario');
+    if (saved) {
+      const d = JSON.parse(saved);
+      inputNome.value = d.nome ?? 'Fulano';
+      inputIdade.value = d.idade ?? 19;
+      selectMoeda.value = d.moeda ?? 'BRL';
+      inputCargo.value = d.cargo ?? 'Gestor de Ciber';
+      inputSalario.value = d.salario ?? 3000;
+      // Exibição inicial coerente com o storage:
+      valorNome.textContent = `Nome: ${inputNome.value}`;
+      valorIdade.textContent = `Idade: ${inputIdade.value} anos`;
+      valorMoeda.textContent = `Moeda: ${selectMoeda.value}`;
+      valorCargo.textContent = `Cargo: ${inputCargo.value}`;
+      valorSalario.textContent = `Renda: ${formatCurrency(inputSalario.value, selectMoeda.value)}`;
+    }
+  });
+  */
+</script>
+
+
+        
+     
+    </div>
+
+</body>
+</html>
