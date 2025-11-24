@@ -61,7 +61,7 @@ formAddReg.addEventListener('submit', (e) => {
 
 
     if (!dataReg || !descReg || valorReg <= 0) {
-        alert('Por favor, insira valores válidos!');
+        alert('Por favor, preencha todos os campos!');
         return;
     }
 
